@@ -1,9 +1,12 @@
 package com.id20048076.l04_reservation;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -11,6 +14,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     CheckBox smoking;
     DatePicker dp;
     TimePicker tp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,5 +92,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        tp.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                // limit time between 8AM and 8PM
+                if(hourOfDay<8||hourOfDay>20){
+                    tp.setCurrentHour(8);
+                    tp.setCurrentMinute(0);
+                }
+            }
+        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            dp.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
+                @Override
+                public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    Calendar c = Calendar.getInstance();
+                    int day = c.get(Calendar.DAY_OF_MONTH);
+                    int month = c.get(Calendar.MONTH);
+                    int year1 = c.get(Calendar.YEAR);
+                    if(year1!=year||month!=monthOfYear||day!=dayOfMonth){
+                        dp.updateDate (year1,
+                                month,
+                                day);
+                    }
+                }
+            });
+        }
     }
 }
